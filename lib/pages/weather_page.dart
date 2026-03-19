@@ -14,7 +14,7 @@ class WeatherPage extends StatefulWidget {
 class _WeatherPageState extends State<WeatherPage> {
 
   //api key
-  final _weatherService = WeatherService('USE YOUR OWN API KEY');
+  final _weatherService = WeatherService('b825ab38a7f7e4834d33a6c323d54867');
   Weather? _weather;    //weather object
 
   //fetch weather
@@ -46,7 +46,7 @@ class _WeatherPageState extends State<WeatherPage> {
       case 'dust':
       case 'fog':
         return 'assets/partly cloudy.json';
-      ;case 'snow':
+      case 'snow':
         return 'assets/snow.json';
       case 'rain':
       case 'drizzle':
@@ -61,6 +61,31 @@ class _WeatherPageState extends State<WeatherPage> {
     }
   }
 
+  Color _getWeatherColor(String? mainCondition){
+    if(mainCondition == null) return Colors.grey[900]!;
+
+    switch(mainCondition.toLowerCase()){
+      case 'clouds':
+      case 'mist':
+      case 'smoke':
+      case 'haze':
+      case 'dust':
+      case 'fog':
+        return Colors.blueGrey[800]!; // Moody grey for overcast
+      case 'snow':
+        return Colors.lightBlue[300]!; // Icy blue for snow
+      case 'rain':
+      case 'drizzle':
+      case 'shower rain':
+      case 'thunderstorm':
+        return Colors.indigo[900]!; // Deep dark blue for storms/rain
+      case 'clear':
+        return Colors.lightBlue[200]!; // Bright blue for clear skies
+      default:
+        return Colors.grey[800]!;
+    }
+  }
+
   @override
   void initState(){
     super.initState();
@@ -69,36 +94,51 @@ class _WeatherPageState extends State<WeatherPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[800],
+      backgroundColor: _getWeatherColor(_weather?.mainCondition),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(_weather?.cityName ?? 'Loading City...',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              )
-            ),     //city name
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.location_on_outlined,
+                      size: 32,
+                      color: Colors.white70,
+                  ),
+                  SizedBox(width: 10),
+                  Text(_weather?.cityName ?? 'Loading City...',
+                      style: TextStyle(
+                        fontSize: 40,
+                        color: Colors.white70,
+                      )
+                  ),
+                ],
+              ),
+            ),
+               //city name
+            SizedBox(height: 200),
+
 
             Lottie.asset(getWeatherAnimation(_weather?.mainCondition)),
 
-            Text('${_weather?.temperature.round()}°C',
+
+            SizedBox(height: 25,),
+            Text('${_weather?.temperature.round() ?? ''}°C',
                 style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 75,
                   color: Colors.white,
                 )
             ),  //temperature of the city
 
             Text(_weather?.mainCondition?? "",
                 style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  fontSize: 30,
+                  color: Colors.white70,
                 )
-            )
+            ),
+            SizedBox(height: 100,)
         ],),
       )
     );
