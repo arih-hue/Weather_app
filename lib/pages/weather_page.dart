@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:weather_app/services/weather_service.dart';
 
 import '../models/weather_model.dart';
@@ -32,7 +33,33 @@ class _WeatherPageState extends State<WeatherPage> {
     }
   }
 
-  //weather amimations
+  String getWeatherAnimation(String? mainCondition) {
+    if (mainCondition == null) return 'assets/sunny.json';
+
+    switch(mainCondition.toLowerCase()){
+      case 'clouds':
+        return 'assets/cloudy.json';
+      case 'mist':
+        return 'assets/mist.json';
+      case 'smoke':
+      case 'haze':
+      case 'dust':
+      case 'fog':
+        return 'assets/partly cloudy.json';
+      ;case 'snow':
+        return 'assets/snow.json';
+      case 'rain':
+      case 'drizzle':
+      case 'shower rain':
+        return 'assets/partly shower.json';
+      case 'thunderstorm':
+        return 'assets/thunder.json';
+      case 'clear':
+        return 'assets/sunny.json';
+      default:
+        return 'assets/sunny.json';
+    }
+  }
 
   @override
   void initState(){
@@ -42,13 +69,36 @@ class _WeatherPageState extends State<WeatherPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[800],
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(_weather?.cityName ?? 'Loading City...'),     //city name
+            Text(_weather?.cityName ?? 'Loading City...',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              )
+            ),     //city name
 
-            Text('${_weather?.temperature.round()}°C')     //temperature of the city
+            Lottie.asset(getWeatherAnimation(_weather?.mainCondition)),
+
+            Text('${_weather?.temperature.round()}°C',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                )
+            ),  //temperature of the city
+
+            Text(_weather?.mainCondition?? "",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                )
+            )
         ],),
       )
     );
