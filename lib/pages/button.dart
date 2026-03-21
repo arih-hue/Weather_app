@@ -12,10 +12,12 @@ class button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
+      height: 40,
+      minWidth: 100,
       elevation: 0,
       onPressed: onPressed,
       color: Color(0xFF92BBED),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Text(text),);
+      child: Text(text,style: TextStyle(fontSize: 20),),);
   }
 }
